@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     // Serialized to allow access within editor
     [SerializeField] private float moveSpeed = 7f;
 
+    private bool isWalking;
+
     private void Update()
     {
         // Vector for storing movement inputs
@@ -38,5 +40,19 @@ public class Player : MonoBehaviour
         
         // Apply player movement with moveDir and moveSpeed and considering frame rate with deltaTime
         transform.position += moveDir * Time.deltaTime * moveSpeed;
+
+        // isWalking is true when the player is moving
+        isWalking = moveDir != Vector3.zero;
+
+        float rotateSpeed = 10f;
+
+        // Rotate player model to face moving direction (uses Slerp to gradually rotate over time)
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+    }
+
+    // Used to send isWalking state to other scripts
+    public bool IsWalking()
+    {
+        return isWalking;
     }
 }
